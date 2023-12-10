@@ -20,7 +20,7 @@ class Player(pg.sprite.Sprite):
         self.animation_frame = 0
         self.image = None
         self.rect = (0, 0)
-        self.set_image(self.idle_images[0], 4)
+        self.set_image(self.idle_images[0], SCALE_FACTOR * 2)
         self.direction = pg.math.Vector2(1, 0)
         self.pos = pg.math.Vector2(WIDTH - self.rect[0], HEIGHT - self.rect[1]) / 2
         self.moving = False
@@ -55,13 +55,13 @@ class Player(pg.sprite.Sprite):
     def animation(self):
         if not self.moving:
             if self.direction.y > 0:
-                self.set_image(self.idle_images[3], 4)
+                self.set_image(self.idle_images[3], SCALE_FACTOR * 2)
             elif self.direction.y < 0:
-                self.set_image(self.idle_images[1], 4)
+                self.set_image(self.idle_images[1], SCALE_FACTOR * 2)
             if self.direction.x > 0:
-                self.set_image(self.idle_images[0], 4)
+                self.set_image(self.idle_images[0], SCALE_FACTOR * 2)
             elif self.direction.x < 0:
-                self.set_image(self.idle_images[2], 4)
+                self.set_image(self.idle_images[2], SCALE_FACTOR * 2)
         else:
             image_set = ()
             if self.direction.y > 0:
@@ -73,7 +73,7 @@ class Player(pg.sprite.Sprite):
             elif self.direction.x < 0:
                 image_set = self.moving_images[2]
             self.animation_frame = (self.animation_frame + 1) % (6 * ANIM_FRAME_DURATION)
-            self.set_image(image_set[self.animation_frame // ANIM_FRAME_DURATION], 4)
+            self.set_image(image_set[self.animation_frame // ANIM_FRAME_DURATION], SCALE_FACTOR * 2)
 
     def update(self):
         self.user_input()
