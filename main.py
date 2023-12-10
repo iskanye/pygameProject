@@ -1,16 +1,19 @@
 import pygame
 from settings import *
+from player import *
 
 if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode(SIZE)
 
-    running = True
     clock = pygame.time.Clock()
-    while running:
+    player = Player()
+
+    while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                pygame.quit()
+                exit()
         clock.tick(FPS)
+        screen.blit(player.image, (0, 0))
         pygame.display.flip()
-    pygame.quit()
