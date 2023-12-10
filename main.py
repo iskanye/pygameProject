@@ -1,11 +1,9 @@
 import pygame
-
-FPS = 60
+from settings import *
 
 if __name__ == '__main__':
     pygame.init()
-    size = width, height = 800, 400
-    screen = pygame.display.set_mode(size)
+    screen = pygame.display.set_mode(SIZE)
 
     running = True
     clock = pygame.time.Clock()
