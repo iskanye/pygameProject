@@ -1,21 +1,22 @@
 import pygame as pg
 from settings import *
+from utils import  *
 
 
 class Player(pg.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.idle_images = (
-            pg.image.load('sprites/player/idle/right.png').convert_alpha(),
-            pg.image.load('sprites/player/idle/up.png').convert_alpha(),
-            pg.image.load('sprites/player/idle/left.png').convert_alpha(),
-            pg.image.load('sprites/player/idle/down.png').convert_alpha()
+            load_sprite('player/idle/right.png'),
+            load_sprite('player/idle/up.png'),
+            load_sprite('player/idle/left.png'),
+            load_sprite('player/idle/down.png')
         )
         self.moving_images = (
-            tuple(pg.image.load(f'sprites/player/movement/right{i + 1}.png').convert_alpha() for i in range(6)),
-            tuple(pg.image.load(f'sprites/player/movement/up{i + 1}.png').convert_alpha() for i in range(6)),
-            tuple(pg.image.load(f'sprites/player/movement/left{i + 1}.png').convert_alpha() for i in range(6)),
-            tuple(pg.image.load(f'sprites/player/movement/down{i + 1}.png').convert_alpha() for i in range(6))
+            tuple(load_sprite(f'player/movement/right{i + 1}.png') for i in range(6)),
+            tuple(load_sprite(f'player/movement/up{i + 1}.png') for i in range(6)),
+            tuple(load_sprite(f'player/movement/left{i + 1}.png') for i in range(6)),
+            tuple(load_sprite(f'player/movement/down{i + 1}.png') for i in range(6))
         )
         self.animation_frame = 0
         self.image = None
