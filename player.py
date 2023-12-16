@@ -19,13 +19,12 @@ class Player(pg.sprite.GroupSingle):
             tuple(load_sprite(f'player/movement/down{i + 1}.png') for i in range(6))
         )
         self.animation_frame = 0
-        self.sprite = pg.sprite.Sprite(self)
+        self.sprite = pg.sprite.Sprite()
         self.sprite.image = None
-        self.sprite.rect = pygame.Rect((WIDTH - TILE * SCALE_FACTOR * 2) / 2,
-                                       (HEIGHT - TILE * SCALE_FACTOR * 2) / 2,
-                                       TILE * SCALE_FACTOR * 2,
-                                       TILE * SCALE_FACTOR * 2)
-        self.set_image(self.idle_images[0], SCALE_FACTOR * 2)
+        self.sprite.rect = pygame.Rect((WIDTH - TILE * PLAYER_SIZE) / 2,
+                                       (HEIGHT - TILE * PLAYER_SIZE) / 2,
+                                       TILE * PLAYER_SIZE, TILE * PLAYER_SIZE)
+        self.set_image(self.idle_images[0], PLAYER_SIZE)
         self.direction = pg.math.Vector2(1, 0)
         self.moving = False
 
@@ -53,19 +52,19 @@ class Player(pg.sprite.GroupSingle):
 
     def movement(self):
         if self.moving:
-            self.sprite.rect.x += self.direction.x * SPEED / FPS
-            self.sprite.rect.y += self.direction.y * SPEED / FPS
+            self.sprite.rect.x += self.direction.x * PLAYER_SPEED / FPS
+            self.sprite.rect.y += self.direction.y * PLAYER_SPEED / FPS
 
     def animation(self):
         if not self.moving:
             if self.direction.y > 0:
-                self.set_image(self.idle_images[3], SCALE_FACTOR * 2)
+                self.set_image(self.idle_images[3], PLAYER_SIZE)
             elif self.direction.y < 0:
-                self.set_image(self.idle_images[1], SCALE_FACTOR * 2)
+                self.set_image(self.idle_images[1], PLAYER_SIZE)
             if self.direction.x > 0:
-                self.set_image(self.idle_images[0], SCALE_FACTOR * 2)
+                self.set_image(self.idle_images[0], PLAYER_SIZE)
             elif self.direction.x < 0:
-                self.set_image(self.idle_images[2], SCALE_FACTOR * 2)
+                self.set_image(self.idle_images[2], PLAYER_SIZE)
         else:
             image_set = ()
             if self.direction.y > 0:
@@ -77,7 +76,7 @@ class Player(pg.sprite.GroupSingle):
             elif self.direction.x < 0:
                 image_set = self.moving_images[2]
             self.animation_frame = (self.animation_frame + 1) % (6 * ANIM_FRAME_DURATION)
-            self.set_image(image_set[self.animation_frame // ANIM_FRAME_DURATION], SCALE_FACTOR * 2)
+            self.set_image(image_set[self.animation_frame // ANIM_FRAME_DURATION], PLAYER_SIZE)
 
     def update(self):
         self.user_input()
