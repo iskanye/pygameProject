@@ -1,5 +1,5 @@
-import pygame
 from player import *
+from utils import *
 
 if __name__ == '__main__':
     pygame.init()
@@ -15,6 +15,6 @@ if __name__ == '__main__':
                 exit()
         clock.tick(FPS)
         screen.fill((0, 0, 0))
-        screen.blit(player.image, player.pos)
+        player.draw(screen)
         player.update()
         pygame.display.flip()

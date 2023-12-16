@@ -1,9 +1,9 @@
 import pygame as pg
 from settings import *
-from utils import  *
+from utils import *
 
 
-class Player(pg.sprite.Sprite):
+class Player(pg.sprite.GroupSingle):
     def __init__(self):
         super().__init__()
         self.idle_images = (
@@ -19,16 +19,18 @@ class Player(pg.sprite.Sprite):
             tuple(load_sprite(f'player/movement/down{i + 1}.png') for i in range(6))
         )
         self.animation_frame = 0
-        self.image = None
-        self.rect = (0, 0)
+        self.sprite = pg.sprite.Sprite(self)
+        self.sprite.image = None
+        self.sprite.rect = pygame.Rect((WIDTH - TILE * SCALE_FACTOR * 2) / 2,
+                                       (HEIGHT - TILE * SCALE_FACTOR * 2) / 2,
+                                       TILE * SCALE_FACTOR * 2,
+                                       TILE * SCALE_FACTOR * 2)
         self.set_image(self.idle_images[0], SCALE_FACTOR * 2)
         self.direction = pg.math.Vector2(1, 0)
-        self.pos = pg.math.Vector2(WIDTH - self.rect[0], HEIGHT - self.rect[1]) / 2
         self.moving = False
 
     def set_image(self, image, scale):
-        self.image = pg.transform.scale(image, (TILE * scale, TILE * scale))
-        self.rect = (TILE * scale, TILE * scale)
+        self.sprite.image = pg.transform.scale(image, (TILE * scale, TILE * scale))
 
     def user_input(self):
         keys = pg.key.get_pressed()
@@ -51,7 +53,8 @@ class Player(pg.sprite.Sprite):
 
     def movement(self):
         if self.moving:
-            self.pos += self.direction * SPEED / FPS
+            self.sprite.rect.x += self.direction.x * SPEED / FPS
+            self.sprite.rect.y += self.direction.y * SPEED / FPS
 
     def animation(self):
         if not self.moving:
