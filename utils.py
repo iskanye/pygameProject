@@ -1,9 +1,9 @@
-import pygame
+import pygame as pg
 from pytmx.util_pygame import load_pygame
 
 
 def load_sprite(name):
-    return pygame.image.load(f'sprites/{name}').convert_alpha()
+    return pg.image.load(f'sprites/{name}').convert_alpha()
 
 
 def load_map(name):

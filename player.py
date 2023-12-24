@@ -1,10 +1,9 @@
-import pygame as pg
-from settings import *
 from utils import *
+from settings import *
 
 
 class Player(pg.sprite.GroupSingle):
-    def __init__(self):
+    def __init__(self, camera):
         super().__init__()
         self.idle_images = (
             load_sprite('player/idle/right.png'),
@@ -21,12 +20,13 @@ class Player(pg.sprite.GroupSingle):
         self.animation_frame = 0
         self.sprite = pg.sprite.Sprite()
         self.sprite.image = None
-        self.sprite.rect = pygame.Rect((WIDTH - TILE * PLAYER_SIZE) / 2,
-                                       (HEIGHT - TILE * PLAYER_SIZE) / 2,
-                                       TILE * PLAYER_SIZE, TILE * PLAYER_SIZE)
+        self.sprite.rect = pg.Rect((WIDTH - TILE * PLAYER_SIZE) / 2,
+                                   (HEIGHT - TILE * PLAYER_SIZE) / 2,
+                                   TILE * PLAYER_SIZE, TILE * PLAYER_SIZE)
         self.set_image(self.idle_images[0], PLAYER_SIZE)
         self.direction = pg.math.Vector2(1, 0)
         self.moving = False
+        self.camera = camera
 
     def set_image(self, image, scale):
         self.sprite.image = pg.transform.scale(image, (TILE * scale, TILE * scale))
@@ -52,8 +52,13 @@ class Player(pg.sprite.GroupSingle):
 
     def movement(self):
         if self.moving:
-            self.sprite.rect.x += self.direction.x * PLAYER_SPEED / FPS
-            self.sprite.rect.y += self.direction.y * PLAYER_SPEED / FPS
+            for i in self.camera.get_sprites_from_layer(2):
+                if pg.sprite.collide_rect(self.sprite, i):
+                    print(i.rect)
+                    return
+            vel_x = self.direction.x * PLAYER_SPEED / FPS
+            vel_y = self.direction.y * PLAYER_SPEED / FPS
+            self.camera.update_player_pos(vel_x, vel_y)
 
     def animation(self):
         if not self.moving:
@@ -82,3 +87,6 @@ class Player(pg.sprite.GroupSingle):
         self.user_input()
         self.movement()
         self.animation()
+
+    def set_pos(self, x, y):
+        self.camera.update_player_pos(x - self.sprite.rect.x, y - self.sprite.rect.y)
