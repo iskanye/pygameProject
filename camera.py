@@ -10,7 +10,7 @@ class Camera(pg.sprite.LayeredUpdates):
     def load_map(self, map):
         self.player_pos = map.player_pos
         for layer, obj in map.layers.items():
-            self.add(obj)
+            self.add(obj, layer=layer)
 
     def update_player_pos(self, delta_x, delta_y):
         for layer in self.layers():

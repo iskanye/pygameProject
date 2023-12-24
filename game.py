@@ -12,11 +12,11 @@ class Game:
         self.clock = pg.time.Clock()
 
         self.camera = Camera()
-        self.camera.load_map(Map('test.tmx'))
 
         self.player = Player(self.camera)
-        self.player.set_pos(*self.camera.player_pos)
         self.camera.add(self.player, layer=PLAYER_LAYER)
+
+        self.load_map('test.tmx')
 
     def update(self):
         for event in pg.event.get():
@@ -24,6 +24,12 @@ class Game:
                 pg.quit()
                 exit()
         self.clock.tick(FPS)
+        self.screen.fill(BACKGROUND_COLOR)
         self.camera.draw(self.screen)
+        pg.draw.rect(self.screen, pg.Color('blue'), self.player.rect, 1)
         self.player.update()
         pg.display.flip()
+
+    def load_map(self, map):
+        self.camera.load_map(Map(map))
+        self.player.set_pos(*self.camera.player_pos)

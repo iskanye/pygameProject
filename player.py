@@ -23,6 +23,8 @@ class Player(pg.sprite.GroupSingle):
         self.sprite.rect = pg.Rect((WIDTH - TILE * PLAYER_SIZE) / 2,
                                    (HEIGHT - TILE * PLAYER_SIZE) / 2,
                                    TILE * PLAYER_SIZE, TILE * PLAYER_SIZE)
+        self.rect = pg.rect.Rect(self.sprite.rect.x + 37 * SCALE_FACTOR, self.sprite.rect.y + 74 * SCALE_FACTOR,
+                                 23 * SCALE_FACTOR, 8 * SCALE_FACTOR)
         self.set_image(self.idle_images[0], PLAYER_SIZE)
         self.direction = pg.math.Vector2(1, 0)
         self.moving = False
@@ -50,15 +52,22 @@ class Player(pg.sprite.GroupSingle):
         else:
             self.moving = False
 
+    def velocity(self):
+        return self.direction * PLAYER_SPEED / FPS
+
     def movement(self):
         if self.moving:
-            for i in self.camera.get_sprites_from_layer(2):
-                if pg.sprite.collide_rect(self.sprite, i):
-                    print(i.rect)
-                    return
-            vel_x = self.direction.x * PLAYER_SPEED / FPS
-            vel_y = self.direction.y * PLAYER_SPEED / FPS
-            self.camera.update_player_pos(vel_x, vel_y)
+            velocity = self.velocity()
+            rect_x = pg.rect.Rect(self.rect.x + velocity.x, self.rect.y,
+                                  self.rect.width, self.rect.height)
+            rect_y = pg.rect.Rect(self.rect.x, self.rect.y + velocity.y,
+                                  self.rect.width, self.rect.height)
+            for i in self.camera.get_sprites_from_layer(COLLISION_LAYER):
+                if rect_x.colliderect(i.rect):
+                    velocity.x = 0
+                if rect_y.colliderect(i.rect):
+                    velocity.y = 0
+            self.camera.update_player_pos(*velocity)
 
     def animation(self):
         if not self.moving:
