@@ -1,4 +1,3 @@
-from utils import *
 from settings import *
 from map import Map
 from player import Player
@@ -26,7 +25,7 @@ class Game:
         self.clock.tick(FPS)
         self.screen.fill(BACKGROUND_COLOR)
         self.camera.draw(self.screen)
-        pg.draw.rect(self.screen, pg.Color('blue'), self.player.rect, 1)
+        pg.draw.rect(self.screen, pg.Color('blue'), self.player.collision_rect, 1)
         self.player.update()
         pg.display.flip()
 

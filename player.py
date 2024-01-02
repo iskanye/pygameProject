@@ -1,8 +1,8 @@
-from utils import *
+import objects.base_object
 from settings import *
 
 
-class Player(pg.sprite.GroupSingle):
+class Player(objects.base_object.BaseObject):
     def __init__(self, camera):
         super().__init__()
         self.idle_images = (
@@ -18,20 +18,19 @@ class Player(pg.sprite.GroupSingle):
             tuple(load_sprite(f'player/movement/down{i + 1}.png') for i in range(6))
         )
         self.animation_frame = 0
-        self.sprite = pg.sprite.Sprite()
-        self.sprite.image = None
-        self.sprite.rect = pg.Rect((WIDTH - TILE * PLAYER_SIZE) / 2,
-                                   (HEIGHT - TILE * PLAYER_SIZE) / 2,
-                                   TILE * PLAYER_SIZE, TILE * PLAYER_SIZE)
-        self.rect = pg.rect.Rect(self.sprite.rect.x + 37 * SCALE_FACTOR, self.sprite.rect.y + 74 * SCALE_FACTOR,
-                                 23 * SCALE_FACTOR, 8 * SCALE_FACTOR)
+        self.rect = pg.Rect((WIDTH - TILE * PLAYER_SIZE) / 2,
+                            (HEIGHT - TILE * PLAYER_SIZE) / 2,
+                            TILE * PLAYER_SIZE, TILE * PLAYER_SIZE)
+        self.collision_rect = pg.rect.Rect(self.rect.x + 32 * SCALE_FACTOR,
+                                           self.rect.y + 74 * SCALE_FACTOR, TILE, 8 * SCALE_FACTOR)
+        self.pivot = pg.Vector2(self.rect.topleft) + pg.Vector2(TILE / 2, 4 * SCALE_FACTOR)
         self.set_image(self.idle_images[0], PLAYER_SIZE)
-        self.direction = pg.math.Vector2(1, 0)
+        self.direction = pg.math.Vector2(0, 1)
         self.moving = False
         self.camera = camera
 
     def set_image(self, image, scale):
-        self.sprite.image = pg.transform.scale(image, (TILE * scale, TILE * scale))
+        self.image = pg.transform.scale(image, (TILE * scale, TILE * scale))
 
     def user_input(self):
         keys = pg.key.get_pressed()
@@ -58,10 +57,10 @@ class Player(pg.sprite.GroupSingle):
     def movement(self):
         if self.moving:
             velocity = self.velocity()
-            rect_x = pg.rect.Rect(self.rect.x + velocity.x, self.rect.y,
-                                  self.rect.width, self.rect.height)
-            rect_y = pg.rect.Rect(self.rect.x, self.rect.y + velocity.y,
-                                  self.rect.width, self.rect.height)
+            rect_x = pg.rect.Rect(self.collision_rect.x + velocity.x, self.collision_rect.y,
+                                  self.collision_rect.width, self.collision_rect.height)
+            rect_y = pg.rect.Rect(self.collision_rect.x, self.collision_rect.y + velocity.y,
+                                  self.collision_rect.width, self.collision_rect.height)
             for i in self.camera.get_sprites_from_layer(COLLISION_LAYER):
                 if rect_x.colliderect(i.rect):
                     velocity.x = 0
@@ -98,4 +97,4 @@ class Player(pg.sprite.GroupSingle):
         self.animation()
 
     def set_pos(self, x, y):
-        self.camera.update_player_pos(x - self.sprite.rect.x, y - self.sprite.rect.y)
+        self.camera.update_player_pos(x - self.rect.x, y - self.rect.y)

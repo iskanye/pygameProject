@@ -1,3 +1,5 @@
+from utils import *
+
 # Main settings
 FPS = 60
 SCALE_FACTOR = 2
@@ -6,8 +8,11 @@ SIZE = WIDTH, HEIGHT = TILE * 12, TILE * 12
 ANIM_FRAME_DURATION = 10
 PLAYER_SIZE = 3
 PLAYER_SPEED = TILE * 5
-# Map Layerss
+# Map Layers
 COLLISION_LAYER = 0
-PLAYER_LAYER = 3
+PLAYER_LAYER = 5
+OBJECT_LAYER = 4
 # Colors
 BACKGROUND_COLOR = (6, 6, 8)
+# Vectors
+NO_PIVOT = pg.Vector2(TILE ** 2, TILE ** 2)
