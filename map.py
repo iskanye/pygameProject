@@ -1,4 +1,5 @@
 import objects.base_object
+import objects.prefabs
 from settings import *
 
 
@@ -16,12 +17,16 @@ class Map:
                     self.layers[layer] = self.layers.get(layer, []) + [sprite]
             else:
                 for obj in map.layers[layer]:
-                    _object = objects.base_object.BaseObject()
-                    _object.image = pg.transform.scale(obj.image, (obj.width * SCALE_FACTOR
-                                                                   , obj.height * SCALE_FACTOR))
-                    _object.rect = pg.rect.Rect(obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR,
-                                                obj.width * SCALE_FACTOR, obj.height * SCALE_FACTOR)
-                    if obj.type == 'player':
-                        self.player_pos = (_object.rect.x + TILE / 2 - PLAYER_SIZE * TILE / 2,
-                                           _object.rect.y - PLAYER_SIZE * TILE * 0.6)
+                    if obj.type in objects.prefabs.PREFABS:
+                        _object = objects.prefabs.PREFABS[obj.type]()
+                        _object.rect.topleft = obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR
+                    else:
+                        _object = objects.base_object.BaseObject()
+                        _object.image = pg.transform.scale(obj.image, (obj.width * SCALE_FACTOR
+                                                                       , obj.height * SCALE_FACTOR))
+                        _object.rect = pg.rect.Rect(obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR,
+                                                    obj.width * SCALE_FACTOR, obj.height * SCALE_FACTOR)
+                        if obj.type == 'player':
+                            self.player_pos = (_object.rect.x + TILE / 2 - PLAYER_SIZE[0] * TILE / 2,
+                                               _object.rect.y - PLAYER_SIZE[1] * TILE * 0.6)
                     self.layers[layer] = self.layers.get(layer, []) + [_object]

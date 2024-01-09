@@ -15,7 +15,7 @@ class Game:
         self.player = Player(self.camera)
         self.camera.add(self.player, layer=PLAYER_LAYER)
 
-        self.load_map('test.tmx')
+        self.load_map('level1.tmx')
 
     def update(self):
         for event in pg.event.get():
@@ -26,6 +26,7 @@ class Game:
         self.screen.fill(BACKGROUND_COLOR)
         self.camera.draw(self.screen)
         pg.draw.rect(self.screen, pg.Color('blue'), self.player.collision_rect, 1)
+        pg.draw.circle(self.screen, pg.Color('blue'), self.player.position(), 2)
         self.player.update()
         pg.display.flip()
 

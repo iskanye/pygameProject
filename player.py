@@ -18,19 +18,16 @@ class Player(objects.base_object.BaseObject):
             tuple(load_sprite(f'player/movement/down{i + 1}.png') for i in range(6))
         )
         self.animation_frame = 0
-        self.rect = pg.Rect((WIDTH - TILE * PLAYER_SIZE) / 2,
-                            (HEIGHT - TILE * PLAYER_SIZE) / 2,
-                            TILE * PLAYER_SIZE, TILE * PLAYER_SIZE)
+        self.rect = pg.Rect((WIDTH - TILE * PLAYER_SIZE[0]) / 2,
+                            (HEIGHT - TILE * PLAYER_SIZE[1]) / 2,
+                            TILE * PLAYER_SIZE[0], TILE * PLAYER_SIZE[1])
         self.collision_rect = pg.rect.Rect(self.rect.x + 32 * SCALE_FACTOR,
                                            self.rect.y + 74 * SCALE_FACTOR, TILE, 8 * SCALE_FACTOR)
-        self.pivot = pg.Vector2(self.rect.topleft) + pg.Vector2(TILE / 2, 4 * SCALE_FACTOR)
-        self.set_image(self.idle_images[0], PLAYER_SIZE)
+        self.pivot = pg.Vector2(TILE * 1.5, TILE * 2.45)
+        self.set_image(self.idle_images[3], PLAYER_SIZE)
         self.direction = pg.math.Vector2(0, 1)
         self.moving = False
         self.camera = camera
-
-    def set_image(self, image, scale):
-        self.image = pg.transform.scale(image, (TILE * scale, TILE * scale))
 
     def user_input(self):
         keys = pg.key.get_pressed()

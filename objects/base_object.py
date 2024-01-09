@@ -10,3 +10,6 @@ class BaseObject(pg.sprite.Sprite):
 
     def position(self):
         return self.rect.topleft + self.pivot
+
+    def set_image(self, image, scale):
+        self.image = pg.transform.scale(image, (TILE * scale[0], TILE * scale[1]))
