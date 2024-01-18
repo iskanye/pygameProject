@@ -27,7 +27,7 @@ class Game:
         self.camera.draw(self.screen)
         pg.draw.rect(self.screen, pg.Color('blue'), self.player.collision_rect, 1)
         pg.draw.circle(self.screen, pg.Color('blue'), self.player.position(), 2)
-        self.player.update()
+        self.camera.update()
         pg.display.flip()
 
     def load_map(self, map):

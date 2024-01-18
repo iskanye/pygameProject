@@ -33,13 +33,13 @@ class Player(objects.base_object.BaseObject):
         keys = pg.key.get_pressed()
         direction = pg.math.Vector2(0, 0)
 
-        if keys[pg.K_w]:
+        if keys[UP]:
             direction.y = -1
-        if keys[pg.K_s]:
+        if keys[DOWN]:
             direction.y = 1
-        if keys[pg.K_d]:
+        if keys[RIGHT]:
             direction.x = 1
-        if keys[pg.K_a]:
+        if keys[LEFT]:
             direction.x = -1
 
         if direction.length_squared() != 0:
@@ -47,6 +47,14 @@ class Player(objects.base_object.BaseObject):
             self.direction = direction.normalize()
         else:
             self.moving = False
+
+        if keys[INTERACT]:
+            for i in filter(lambda a: a.interaction_rect() is not None,
+                            self.camera.get_sprites_from_layer(OBJECT_LAYER)):
+                if self.collision_rect.colliderect(i.interaction_rect()):
+                    print('collide', i)
+                    i.interact(self)
+                    break
 
     def velocity(self):
         return self.direction * PLAYER_SPEED / FPS
@@ -58,11 +66,20 @@ class Player(objects.base_object.BaseObject):
                                   self.collision_rect.width, self.collision_rect.height)
             rect_y = pg.rect.Rect(self.collision_rect.x, self.collision_rect.y + velocity.y,
                                   self.collision_rect.width, self.collision_rect.height)
-            for i in self.camera.get_sprites_from_layer(COLLISION_LAYER):
-                if rect_x.colliderect(i.rect):
+
+            def check_collision(rect):
+                if rect_x.colliderect(rect):
                     velocity.x = 0
-                if rect_y.colliderect(i.rect):
+                if rect_y.colliderect(rect):
                     velocity.y = 0
+
+            collision_tiles = self.camera.get_sprites_from_layer(COLLISION_LAYER)
+            collision_objects = list(filter(lambda a: a.collision_rect() is not None,
+                                            self.camera.get_sprites_from_layer(OBJECT_LAYER)))
+            for i in collision_tiles:
+                check_collision(i.rect)
+            for i in collision_objects:
+                check_collision(i.collision_rect())
             self.camera.update_player_pos(*velocity)
 
     def animation(self):
