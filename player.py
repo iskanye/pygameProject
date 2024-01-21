@@ -3,7 +3,7 @@ from settings import *
 
 
 class Player(objects.base_object.BaseObject):
-    def __init__(self, camera):
+    def __init__(self, camera, game, lives=None):
         super().__init__()
         self.idle_images = (
             load_sprite('player/idle/right.png'),
@@ -28,6 +28,7 @@ class Player(objects.base_object.BaseObject):
         self.direction = pg.math.Vector2(0, 1)
         self.moving = False
         self.camera = camera
+        self.game = game
 
     def user_input(self):
         keys = pg.key.get_pressed()
@@ -52,7 +53,6 @@ class Player(objects.base_object.BaseObject):
             for i in filter(lambda a: a.interaction_rect() is not None,
                             self.camera.get_sprites_from_layer(OBJECT_LAYER)):
                 if self.collision_rect.colliderect(i.interaction_rect()):
-                    print('collide', i)
                     i.interact(self)
                     break
 
@@ -81,6 +81,13 @@ class Player(objects.base_object.BaseObject):
             for i in collision_objects:
                 check_collision(i.collision_rect())
             self.camera.update_player_pos(*velocity)
+
+            trigger_objects = list(filter(lambda a: a.trigger_rect() is not None,
+                                          self.camera.get_sprites_from_layer(OBJECT_LAYER)))
+
+            for i in trigger_objects:
+                if self.collision_rect.colliderect(i.trigger_rect()):
+                    i.trigger(self)
 
     def animation(self):
         if not self.moving:
