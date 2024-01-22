@@ -3,7 +3,7 @@ from settings import *
 
 
 class Player(objects.base_object.BaseObject):
-    def __init__(self, camera, game, lives=None):
+    def __init__(self, camera, game, lives):
         super().__init__()
         self.idle_images = (
             load_sprite('player/idle/right.png'),
@@ -29,6 +29,7 @@ class Player(objects.base_object.BaseObject):
         self.moving = False
         self.camera = camera
         self.game = game
+        self.lives = lives
 
     def user_input(self):
         keys = pg.key.get_pressed()

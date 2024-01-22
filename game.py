@@ -14,11 +14,11 @@ class Game:
 
         self.camera = Camera()
 
-        self.player = Player(self.camera, self)
-        self.camera.add(self.player, layer=PLAYER_LAYER)
-
-        self.lives = Lives()
+        self.lives = Lives(self)
         self.camera.add(self.lives, layer=UI_LAYER)
+
+        self.player = Player(self.camera, self, self.lives)
+        self.camera.add(self.player, layer=PLAYER_LAYER)
 
         try:
             with open('save.txt', 'rt') as f:
@@ -45,4 +45,5 @@ class Game:
         self.current_level = map
         self.camera.unload_map()
         self.camera.load_map(Map(map))
+        self.lives.restore_health()
         self.player.set_pos(*self.camera.player_pos)
