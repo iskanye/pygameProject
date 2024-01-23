@@ -17,13 +17,14 @@ class Map:
                     self.layers[layer] = self.layers.get(layer, []) + [sprite]
             else:
                 for obj in tmx_map.layers[layer]:
+                    image = pg.transform.scale(obj.image, (obj.width * SCALE_FACTOR,
+                                                           obj.height * SCALE_FACTOR))
                     if obj.type in objects.prefabs.PREFABS:
-                        _object = objects.prefabs.PREFABS[obj.type](**obj.properties)
+                        _object = objects.prefabs.PREFABS[obj.type](**obj.properties, image=image)
                         _object.rect.topleft = obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR
                     else:
                         _object = objects.base_object.BaseObject()
-                        _object.image = pg.transform.scale(obj.image, (obj.width * SCALE_FACTOR
-                                                                       , obj.height * SCALE_FACTOR))
+                        _object.image = image
                         _object.rect = pg.rect.Rect(obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR,
                                                     obj.width * SCALE_FACTOR, obj.height * SCALE_FACTOR)
                         if obj.type == 'player':

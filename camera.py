@@ -6,6 +6,11 @@ class Camera(pg.sprite.LayeredUpdates):
         super().__init__()
         self.player_pos = (0, 0)
 
+        self.shake_magnitude = 0
+        self.shake_time = 0
+        self.shaking = False
+        self.shake_frame = 0
+
     def load_map(self, map):
         self.player_pos = map.player_pos
         for layer, obj in map.layers.items():
@@ -38,3 +43,18 @@ class Camera(pg.sprite.LayeredUpdates):
                     surface.blit(obj.image, obj.rect.topleft)
         for tile in self.get_sprites_from_layer(UI_LAYER):
             surface.blit(tile.image, tile.rect.topleft)
+
+    def shake(self, magnitude, time):
+        self.shake_magnitude = magnitude
+        self.shake_time = time
+        self.shaking = True
+        self.shake_frame = 0
+
+    def update(self):
+        super().update()
+        if self.shaking and self.shake_frame <= self.shake_time * FPS:
+            self.shake_frame += 1
+            self.update_player_pos(*(rand_norm_vector() * (1 - self.shake_frame /
+                                                           (self.shake_time * FPS)) * self.shake_magnitude))
+        if self.shake_frame > self.shake_time * FPS:
+            self.shaking = False

@@ -30,10 +30,10 @@ class TriggerSpike(objects.base_object.BaseObject):
             self.set_image(self.images[self.animation_frame // ANIM_FRAME_DURATION + 2], (1, 1))
 
     def cycle(self):
-        if self.triggered and self.timer < FPS and not self.damaging:
+        if self.triggered and self.timer < 0.75 * FPS and not self.damaging:
             self.timer += 1
 
-        elif self.triggered and self.timer >= FPS:
+        elif self.triggered and self.timer >= 0.75 * FPS:
             self.timer = 0
             self.damaging = True
 

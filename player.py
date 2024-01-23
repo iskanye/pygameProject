@@ -21,8 +21,8 @@ class Player(objects.base_object.BaseObject):
         self.rect = pg.Rect((WIDTH - TILE * PLAYER_SIZE[0]) / 2,
                             (HEIGHT - TILE * PLAYER_SIZE[1]) / 2,
                             TILE * PLAYER_SIZE[0], TILE * PLAYER_SIZE[1])
-        self.collision_rect = pg.rect.Rect(self.rect.x + 32 * SCALE_FACTOR,
-                                           self.rect.y + 74 * SCALE_FACTOR, TILE, 8 * SCALE_FACTOR)
+        self.collision_rect = pg.rect.Rect(self.rect.x + 1.215 * TILE,
+                                           self.rect.y + 2.3125 * TILE, 0.6 * TILE, 0.25 * TILE)
         self.pivot = pg.Vector2(TILE * 1.5, TILE * 2.45)
         self.set_image(self.idle_images[3], PLAYER_SIZE)
         self.direction = pg.math.Vector2(0, 1)

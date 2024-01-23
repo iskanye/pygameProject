@@ -40,6 +40,7 @@ class Lives(objects.base_object.BaseObject):
             return
         self.lives -= 1
         self.damaged = True
+        self.game.camera.shake(5, 1.5)
         if self.lives == 0:
             self.game.load_map(self.game.current_level)
 
